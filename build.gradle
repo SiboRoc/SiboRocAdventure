@@ -1,0 +1,145 @@
+
+// Boilerplate for the ForgeGradle and MinecraftForge repos
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'gradle.plugin.net.minecrell',
+                    name: 'licenser',
+                    version: '0.4.1'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'maven-publish'
+apply plugin: 'net.minecrell.licenser'
+
+repositories {
+    maven {
+        url "$projectDir/../CommonMaven"
+    }
+    maven {
+        url "https://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        name 'tterrag maven'
+        url "http://maven.tterrag.com/"
+    }
+    mavenLocal()
+}
+
+license {
+    header = project.file('HEADER')
+    include '**/*.java'
+}
+
+// http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "0.0.1-alpha"
+group = "com.sibomots.siborocadventure" 
+archivesBaseName = "SiboRocAdventure-UNKNOWN"
+
+
+project.afterEvaluate {
+    archivesBaseName = "SiboRocAdventure-${project.MC_VERSION}"
+}
+
+sourceCompatibility = 
+  targetCompatibility = 
+  compileJava.sourceCompatibility = 
+  compileJava.targetCompatibility = 
+  JavaVersion.VERSION_1_8
+
+sourceSets {
+    main.resources.srcDirs += 'src/main/generated_resources'
+}
+
+minecraft {
+    mappings channel: 'snapshot', version: '20201028-1.16.3'
+    //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', ''
+            property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
+            mods {
+                thismod {
+                    source sourceSets.main
+                }
+            }
+        }
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', ''
+            property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
+            mods {
+                thismod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', ''
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'siborocadventure', '--all', '--output', file('src/main/generated_resources/'), '--existing', file('src/main/resources/')
+            mods {
+                thismod {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    //minecraft 'net.minecraftforge:forge:1.15.2-31.2.47'
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.22'
+    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+
+    compile fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
+        transitive = false
+    })
+}
+
+jar {
+    from('/') {
+        include 'LICENSE.txt'
+    }
+
+    manifest {
+        attributes([
+            "Specification-Title": "siborocadventure",
+            "Specification-Vendor": "sibomots",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"sibomots",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+tasks.publish.dependsOn build
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId project.archivesBaseName
+            from components.java
+            //artifact sourceJar
+        }
+    }
+    repositories {
+        maven {
+            url "$projectDir/../CommonMaven"
+        }
+    }
+}
+
