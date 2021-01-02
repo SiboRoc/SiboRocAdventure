@@ -1,0 +1,181 @@
+\documentclass[12pt]{memoir}
+\usepackage{appendix}
+\usepackage{cite}
+\usepackage{amssymb, amsmath}
+\usepackage{pstricks}
+\usepackage[cm]{fullpage}
+\usepackage{palatino}
+\usepackage{setspace}
+\epigraphfontsize{\small\itshape}
+\setlength\epigraphwidth{8cm}
+\setlength\epigraphrule{0pt}
+\usepackage{graphics}
+\usepackage{endnotes}
+\newcommand{\mystery}{{R_{\text{M}}}}
+\newcommand{\minecraft}{{\textit{Minecraft}}}
+\newcommand{\forge}{{\textit{Forge}}}
+
+\date{\today}
+\author{sibomots -- {\tt{sibomots@sibomots.net}}}
+\title{ {\textbf{SiboRocAdventure Mod Development}} }
+
+\begin{document}
+
+\chapter{About Time}
+
+%%\epigraph{This is indeed the Golden Age.  The greatest rewards come
+%%from gold; by gold love is won; by gold is faith destroyed; by gold is
+%%justice bought ; the law follows the track of gold, while modesty
+%%will soon follow it when law is gone.}{Propertius}
+
+%%\epigraph{I consider that nothing is more powerful than gold.  By it all
+%%things are torn asunder; all things are accomplished.}{Diphilus}
+
+\epigraph{Such is oft the course of deeds that move the wheels of
+the world: small hands do them because they must, while the eyes of the
+great are elsewhere.}{Elrond}
+\epigraph{Go not to the Elves for counsel, for they will say both 
+no and yes.}{Frodo}
+
+\section{So, where to begin}
+
+Where to begin is a good question.  First a review of the goal.
+
+\begin{itemize}
+\item Make a \forge\footnote{\minecraft\ \forge} mod.
+\item Make the mod do something interesting.
+\item Use new graphical models and user-interfaces (not just text)
+\item Integrate the mod with pre\"existing capabilities of mods.
+\end{itemize}
+
+If a goal could be anything more than that, then it might prevent
+ever getting started.  But those goals alone are a heavy lift especially
+if the person reading this is trying to {\textit{learn how to write 
+the code for a \forge\ mod}} for the first time.
+
+The reader may even be somewhat familiar with \minecraft\ and perhaps
+even worked {\textit{with}} mods, but not necessarily written any
+themselves.  On the other hand, the reader may be experienced enough
+with the \forge\ framework to know how to get started and what
+steps to take. 
+
+Whatever the case, the author doesn't have much background in
+actually {\textit{writing mods}}, but he has studied the source code
+of many mods, read the documentation for \forge\ and tried to come
+to terms with the amount of architecture and design that needs to 
+be applied to make a good mod.
+
+\subsection{Goals}
+
+The goals of the project are to
+
+\begin{itemize}
+\item Make a \forge\ mod for the 1.16 version of \minecraft. This goal 
+is straight forward.  The requirement is to configure the mod to be
+built within the \forge\ 1.16 development version.
+\item The mod is going to provide the capabiity to work with metals. Metal
+working is an activity that would be categorized depending on the age of
+the technology in force.   The goal is to make the mod relateable to
+the medieval times but imbued with a large dose of fantasy as to make
+it interesting, practical as much as fantasy imaginations are (infinitely),
+and related to the examples one might know from experience in literature.
+\begin{itemize}
+\item A goal is to make new {\textbf{ore}}.  The names of the new
+ores are:
+  \begin{itemize}
+   \item {\textbf{Hematite}} - an ore with iron.
+   \item {\textbf{Corundum}} - an ore with traces of metal, but it's use is an abrasive.
+   \item {\textbf{Chromium}} - a very hard (brittle) metal when refined from ore.
+   \item {\textbf{Sibomium}} - an ore that when refined has magical effect on the metal it alloys with.
+   \item {\textbf{Glacial Till}} - an mineral rich gravel for construction.
+   \item And others to be determined\ldots
+  \end{itemize} 
+\item A goal is to make ores harvestable.  Biomes will generate
+during world setup and these ore blocks will be populated in the world.
+\item A goal is of the mod is these ores are ingredients for alloys
+with other Vanilla ores, the result of which is material to use for fabricating
+special weapons and armor.  It can also be rendered into other
+forms for jewlery and magic items.  The result of such alloying recipe 
+produces ingots of various categories.
+\item Add recpie for how a new ore can be alloyed with other ores
+in a special (new) type of furnace designed to mix ores.  
+\item Add a new furnace type. It will be a primitive type that 
+requires {\textbf{bellows}}, an energy source from a {\textbf{water wheel}}
+(to rotate equipment, provide mechanical actuation of the mechanisms), 
+a requirement for indoor use to be ventilted {\textbf{chimney}},
+\item Items that can be built from alloys from the refined ore:
+ \begin{itemize}
+    \item A {\textbf{anvil}}  (used to make tools and forge parts)
+    \item A leather {\textbf{bellows}} (used to increase heat in furnacce)
+    \item A {\textbf{crowbar}} (used to split blocks of rocky substance)
+    \item A {\textbf{drill bit}} (used to make tools and parts)
+    \item A {\textbf{friction bearing}} (used to fabricate machines)
+    \item A {\textbf{flue}} section for chimney (used to build furnace)
+    \item A {\textbf{blast furnace}} (used to smelt ore and make alloys)
+    \item A {\textbf{grinding}} wheel (used to make tools and parts)
+    \item A {\textbf{massey hammer}} (used to forge metal and make tools)
+    \item A leather {\textbf{pulley belt}} (used to fabricate machines)
+    \item A {\textbf{round bar}} stock (used to make tools and parts)
+    \item A {\textbf{square bar}} stock (used to make tools and parts)
+    \item A {\textbf{tongs}} (used to make tools and parts)
+    \item A {\textbf{water wheel}} (used to activate machines)
+    \item A {\textbf{wooden gear}} (used to fabricate machines)
+    \item A {\textbf{wooden pinion}} (used to fabricate machines)
+    \item A {\textbf{grease}} (used to maintain machines and tools)
+    \item And others to be determined\ldots
+ \end{itemize}
+
+Weapons that cxan be built using metal alloys refined from these ores:
+
+   \begin{itemize}
+      \item A {\textbf{bastard sword}}
+      \item A {\textbf{battle axe}}
+      \item A {\textbf{chain}}
+      \item A {\textbf{dagger}}
+      \item A {\textbf{morning star}}
+      \item A {\textbf{pike}}
+      \item A {\textbf{short-sword}}
+      \item And others to be determined\ldots
+   \end{itemize}
+\end{itemize}
+\item Add the secret functionality that pulls the ores, items, objects, etc\ldots together into
+ a system that has a purpose, a point.  
+\item Start with something simple in terms of a mod so that the basics can be planned, understood,
+implemented and run with some degree of satisfaction.  
+\end{itemize}
+
+\chapter{The Development Environment}
+\section{Etc\dots}
+
+TBD
+
+\chapter{Mod Design}
+\section{Etc\ldots}
+Section(s) for how to implement the mod.
+
+
+\chapter{Installation}
+\section{Etc\dots}
+TBD
+
+\chapter{Play}
+\section{Etc\dots}
+TBD
+
+
+\chapter{Configuration}
+\section{Etc\dots}
+Once the mod is installed there are configuration options that
+can be set by the user.
+
+TBD
+
+\chapter{Integration with Vanilla Version}
+\section{Etc\dots}
+
+There are elements of the mod that require integration with a set of
+Vanilla features of the game.
+
+TBD
+
+\end{document}
